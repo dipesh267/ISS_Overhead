@@ -3,6 +3,7 @@ import datetime
 from zoneinfo import ZoneInfo
 import smtplib
 from geopy.distance import geodesic
+import personal
 
 MY_LAT = 38.016874
 MY_LONG = -121.889160
@@ -24,14 +25,14 @@ def is_dark():
     sunset_pst = sunset.astimezone(ZoneInfo("America/Los_Angeles"))
 
     current_hour = datetime.datetime.now().hour
-    if current_hour < sunrise_pst.hour and current_hour > sunset_pst.hour:
+    if current_hour > sunrise_pst.hour and current_hour < sunset_pst.hour:
         return True
     else:
         return False
 
 def send_email():
-    my_email = "dipesh267@gmail.com"
-    password = 'oolvcfjegztsdnay'
+    my_email = personal.my_email
+    password = personal.password
     connection = smtplib.SMTP('smtp.gmail.com', 587)
 
     connection.starttls()
@@ -50,7 +51,7 @@ def check_near_mylocation(lat, long):
 
     distance = geodesic(my_location, target_location)
 
-    if distance < MAX_DIST:
+    if distance > MAX_DIST:
         send_email()
     else:
         print("not near you")
