@@ -25,7 +25,7 @@ def is_dark():
     sunset_pst = sunset.astimezone(ZoneInfo("America/Los_Angeles"))
 
     current_hour = datetime.datetime.now().hour
-    if current_hour > sunrise_pst.hour and current_hour < sunset_pst.hour:
+    if current_hour < sunrise_pst.hour and current_hour > sunset_pst.hour:
         return True
     else:
         return False
@@ -40,7 +40,7 @@ def send_email():
     connection.login(user=my_email, password=password)
     connection.sendmail(
         from_addr=my_email,
-        to_addrs="dipesh267@hotmail.com",
+        to_addrs=personal.to_send_email,
         msg = f"Subject: Look up for ISS near your \n\n look up dude the ISS is passing over your"
     )
 
@@ -51,7 +51,7 @@ def check_near_mylocation(lat, long):
 
     distance = geodesic(my_location, target_location)
 
-    if distance > MAX_DIST:
+    if distance < MAX_DIST:
         send_email()
     else:
         print("not near you")
